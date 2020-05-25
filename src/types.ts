@@ -1,16 +1,17 @@
 export interface IShape {
+  x: number;
+  y: number;
   color: string;
-  shape: number[][];
-  rotate: () => void;
-  move: ({ x, y }: { x: number; y: number }) => void;
+  rotate: (param?: { clockwise: boolean }) => void;
+  move: ({ x, y }: { x?: number; y?: number }) => void;
 }
 
 export enum ShapeType {
-  I,
-  J,
-  L,
-  O,
-  S,
-  T,
-  Z,
+  I = 'I',
+  J = 'J',
+  L = 'L',
+  O = 'O',
+  S = 'S',
+  T = 'T',
+  Z = 'Z',
 }

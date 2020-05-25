@@ -1,23 +1,20 @@
 import { ShapeFactory } from './shape/ShapeFactory';
-import { ShapeType } from './types';
+import { ShapeType, IShape } from './types';
 
 export class Game {
-  score = 0;
-  lines = 0;
-  level = 0;
-  field = Array.from({ length: 20 }, () => new Array(10).fill(0));
+  public field: any[][];
+  public activePiece: IShape;
+  public nextPiece: IShape;
+  public score = 0;
+  public lines = 0;
+  public level = 0;
   private shapeFactory: ShapeFactory = new ShapeFactory();
 
   constructor() {
-    // this.field[10][0] = 1;
-    // this.field[9][1] = 1;
-    // this.field[10][1] = 1;
-    // this.field[10][2] = 1;
+    this.field = this.createPlayField();
+    this.activePiece = this.createPiece();
+    this.nextPiece = this.createPiece();
   }
-
-  activePiece = this.createPiece();
-
-  nextPiece = this.createPiece();
 
   getState() {
     const field = this.createPlayField();
@@ -44,53 +41,42 @@ export class Game {
     };
   }
 
-  createPlayField() {
-    const field: any[] = [];
+  /** Creates empty play field */
+  private createPlayField = (): number[][] =>
+    Array.from({ length: 20 }, () => new Array(10).fill(0));
 
-    for (let y = 0; y < 20; y++) {
-      field[y] = [];
+  /** Creates random piece */
+  private createPiece(): IShape {
+    const values = Object.keys(ShapeType);
+    const randomShapeType = values[Math.floor(Math.random() * values.length)];
 
-      for (let x = 0; x < 10; x++) {
-        field[y][x] = 0;
-      }
-    }
-
-    return field;
-  }
-
-  createPiece() {
-    const index = Math.floor(Math.random() * 7);
-    const type = ShapeType[index];
-    const piece = { x: 0, y: 0 };
-    console.log(type);
-
-    return this.shapeFactory.createShape(ShapeType[type]);
+    return this.shapeFactory.createShape(ShapeType[randomShapeType as ShapeType]);
   }
 
   movePieceLeft() {
-    this.activePiece.x -= 1;
+    this.activePiece.move({ x: this.activePiece.x - 1 });
 
     /** If piece is outside of the field, revert the changes */
     if (this.hasCollision) {
-      this.activePiece.x += 1;
+      this.activePiece.move({ x: this.activePiece.x + 1 });
     }
   }
 
   movePieceRight() {
-    this.activePiece.x += 1;
+    this.activePiece.move({ x: this.activePiece.x + 1 });
 
     /** If piece is outside of the field, revert the changes */
     if (this.hasCollision) {
-      this.activePiece.x -= 1;
+      this.activePiece.move({ x: this.activePiece.x - 1 });
     }
   }
 
   movePieceDown() {
-    this.activePiece.y += 1;
+    this.activePiece.move({ y: this.activePiece.y + 1 });
 
     /** If piece is outside of the field, revert the changes */
     if (this.hasCollision) {
-      this.activePiece.y -= 1;
+      this.activePiece.move({ y: this.activePiece.y - 1 });
       this.lockPiece();
       this.updatePieces();
     }
@@ -98,13 +84,6 @@ export class Game {
 
   rotatePiece() {
     this.activePiece.rotate();
-    // this.activePiece.rotationIndex = (this.activePiece.rotationIndex + 1) % 4;
-    // console.log(this.hasCollision);
-    // if (this.hasCollision) {
-    //   this.activePiece.rotationIndex =
-    //     this.activePiece.rotationIndex > 0 ? this.activePiece.rotationIndex - 1 : 3;
-    // }
-
     return this.activePiece;
   }
 
@@ -145,7 +124,6 @@ export class Game {
 
     for (let y = 0; y < blocks.length; y++) {
       for (let x = 0; x < blocks[y].length; x++) {
-        console.log(blocks[y][x]);
         if (blocks[y][x]) {
           this.field[pieceY + y][pieceX + x] = blocks[y][x];
         }

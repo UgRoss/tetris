@@ -1,23 +1,26 @@
-export class Shape {
+import { IShape } from '~/types';
+export class Shape implements IShape {
   public x: number = 0;
   public y: number = 0;
-  color: string = 'red';
+  public color: string = 'red';
 
   constructor(public blocks: number[][]) {}
 
-  public move({ x = this.x, y = this.y }: { x: number; y: number }) {
+  public move({ x = this.x, y = this.y }) {
     this.x = x;
     this.y = y;
   }
 
-  public rotate() {
+  public rotate({ clockwise = true } = {}) {
     const blocks = this.blocks;
     const temp: number[][] = blocks.map((row) => new Array(row.length).fill(0));
-    console.log('temp', JSON.parse(JSON.stringify(temp)));
 
     blocks.forEach((xRow, y) => {
       xRow.forEach((_val, x) => {
-        temp[x][y] = blocks[xRow.length - 1 - y][x];
+        const blockPos = clockwise
+          ? blocks[xRow.length - 1 - y][x]
+          : blocks[xRow.length - 1 - y][x];
+        clockwise ? (temp[x][y] = blockPos) : (temp[y][x] = blockPos);
       });
     });
 
