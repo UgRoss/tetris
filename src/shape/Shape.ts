@@ -1,10 +1,10 @@
 import { IShape } from '~/types';
+
 export class Shape implements IShape {
   public x: number = 0;
   public y: number = 0;
-  public color: string = 'red';
 
-  constructor(public blocks: number[][]) {}
+  constructor(public blocks: number[][], public color: string = 'red') {}
 
   public move({ x = this.x, y = this.y }) {
     this.x = x;

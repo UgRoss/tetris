@@ -1,16 +1,13 @@
 import { Game } from './Game';
 import { View } from './View';
-import { Shape } from './shape/Shape';
 
 const root = document.querySelector('#root') as HTMLElement;
 
 const game = new Game();
 const view = new View(root, 320, 640, 20, 10);
-const shape = new Shape();
 
 (window as any).game = game;
 (window as any).view = view;
-(window as any).shape = shape;
 
 document.addEventListener('keydown', (event) => {
   switch (event.keyCode) {

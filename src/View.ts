@@ -1,6 +1,15 @@
 export class View {
   private canvas: HTMLCanvasElement = document.createElement('canvas');
   private context: CanvasRenderingContext2D = this.canvas.getContext('2d');
+  private static colors = {
+    '1': 'cyan',
+    '2': 'blue',
+    '3': 'orange',
+    '4': 'yellow',
+    '5': 'green',
+    '6': 'purple',
+    '7': 'red'
+  }
 
   private blockWidth: number;
   private blockHeight: number;
@@ -45,14 +54,14 @@ export class View {
             y * this.blockHeight,
             this.blockWidth,
             this.blockHeight,
-            'red'
+            View.colors[block]
           );
         }
       }
     }
   }
 
-  private renderBlock(x, y, width, height, color) {
+  private renderBlock(x: number, y: number, width: number, height: number, color: string) {
     this.context.fillStyle = color;
     this.context.strokeStyle = 'black';
     this.context.lineWidth = 2;
